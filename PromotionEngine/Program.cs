@@ -32,7 +32,9 @@ namespace PromotionEngine
 
             var cartDetails = CalculateItemsInCart(cart);
 
-            orderValue = ApplyingPromotionTypes(cartDetails);
+            ApplyingPromotionTypes(cartDetails);
+
+            CalculateCartItemsOrderValue(cartDetails);
 
             //TODO: Handle this promotion type here
 
@@ -43,6 +45,20 @@ namespace PromotionEngine
 
             //TODO: Make sure to write code which is open for extension.
             //Promotion Types //TODO: Add promotion types 
+
+            return orderValue;
+        }
+
+        private static double CalculateCartItemsOrderValue(List<CartDetail> cartDetails)
+        {
+            cartDetails.ForEach(cartDetail =>
+            {
+                var itemId = cartDetail.SKUId;
+                var itemUnits = cartDetail.NoOfUnits;
+
+                var unitPrice  = GetUnitPriceForSKU(itemId);
+                orderValue += (unitPrice * itemUnits);
+            } );
 
             return orderValue;
         }
@@ -61,7 +77,7 @@ namespace PromotionEngine
                 {
                     CartDetails = new List<CartDetail> {
                     new CartDetail {SKUId = 'A', NoOfUnits = 3}},
-                    Price = 30
+                    Price = 90
                 }
             };
 
@@ -75,12 +91,12 @@ namespace PromotionEngine
                         //TODO: This logic needs to be handled for CartItemUnit > PromotionTypeCartItemUnit
 
                         cartDetails.RemoveAll(x => x.SKUId == promotionTypeCartDetail.SKUId);
-                        orderValue += orderValue + promotionType.Price;
+                        orderValue += promotionType.Price; //TODO: Verify this calculation
                     }
                 });
             });
 
-            return orderValue;
+            return orderValue; //TODO: If it is globally declared value then should we return it or not
         }
 
         private static List<CartDetail> CalculateItemsInCart(List<char> cart)

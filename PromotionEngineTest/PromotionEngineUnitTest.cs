@@ -14,7 +14,7 @@ namespace PromotionEngineTest
             var orderValue = Program.PromotionEngine();
 
             //Assert
-            Assert.Equal(30, orderValue);
+            Assert.Equal(170, orderValue);
             //TODO: Order Values needs to be updated based on the test scenario.
         }
     }
