@@ -5,7 +5,7 @@ using PromotionEngine.Models;
 
 namespace PromotionEngine
 {
-    class Program
+    public class Program
     {
         static double orderValue = 0;
 
@@ -19,7 +19,7 @@ namespace PromotionEngine
             Console.ReadLine();
         }
 
-        private static void PromotionEngine()
+        public static double PromotionEngine()
         {
             var cart = GetCart();
 
@@ -32,7 +32,7 @@ namespace PromotionEngine
 
             var cartDetails = CalculateItemsInCart(cart);
 
-            orderValue =  ApplyingPromotionTypes(cartDetails);
+            orderValue = ApplyingPromotionTypes(cartDetails);
 
             //TODO: Handle this promotion type here
 
@@ -43,6 +43,8 @@ namespace PromotionEngine
 
             //TODO: Make sure to write code which is open for extension.
             //Promotion Types //TODO: Add promotion types 
+
+            return orderValue;
         }
 
         //TODO: Make use of Solid principles
@@ -53,33 +55,26 @@ namespace PromotionEngine
             // 1* C + 1*D, 30
             // 3 * A = 120
             // A = 40%A 
-            var promotionTypes = new List<PromotionType>();
-            promotionTypes.Add(
-                //TODO: Handle this later on
-                // new PromotionType
-                // {
-                //     CartDetails = new List<CartDetail> {
-                //     new CartDetail {SKUId = 'C', NoOfUnits = 1},
-                //     new CartDetail {SKUId = 'D', NoOfUnits = 1}},
-                //     Price = 30
-                // } 
-                 new PromotionType
+            var promotionTypes = new List<PromotionType>
+            {
+                new PromotionType
                 {
                     CartDetails = new List<CartDetail> {
                     new CartDetail {SKUId = 'A', NoOfUnits = 3}},
                     Price = 30
-                });
+                }
+            };
 
-            promotionTypes.ForEach(promotionType => 
+            promotionTypes.ForEach(promotionType =>
             {
-                promotionType.CartDetails.ForEach(promotionTypeCartDetail=> 
+                promotionType.CartDetails.ForEach(promotionTypeCartDetail =>
                 {
-                    if(cartDetails.Any(cartDetail=> cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits))
+                    if (cartDetails.Any(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits))
                     {
                         //TODO: Write Elimination logic.
                         //TODO: This logic needs to be handled for CartItemUnit > PromotionTypeCartItemUnit
 
-                        cartDetails.RemoveAll(x=> x.SKUId == promotionTypeCartDetail.SKUId);
+                        cartDetails.RemoveAll(x => x.SKUId == promotionTypeCartDetail.SKUId);
                         orderValue += orderValue + promotionType.Price;
                     }
                 });
