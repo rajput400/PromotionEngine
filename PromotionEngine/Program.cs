@@ -103,9 +103,11 @@ namespace PromotionEngine
                             cartDetails.RemoveAll(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId);
                             if (updatedUnits > 0)
                                 cartDetails.Add(new CartDetail { SKUId = promotionTypeCartDetail.SKUId, NoOfUnits = updatedUnits });
-                            orderValue += promotionType.Price;
 
-                        } while (cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId).NoOfUnits >= promotionTypeCartDetail.NoOfUnits);
+                            if (promotionTypeCartDetail.Equals(promotionType.CartDetails.Last()))
+                                orderValue += promotionType.Price;
+
+                        } while (cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId)?.NoOfUnits >= promotionTypeCartDetail.NoOfUnits);
                         //TODO: Handle this First or Default to any.
                     });
                 }
