@@ -91,16 +91,20 @@ namespace PromotionEngine
 
             promotionTypes.ForEach(promotionType =>
             {
-                promotionType.CartDetails.ForEach(promotionTypeCartDetail =>
+                var temp = promotionType.CartDetails.All(promotionTypeCartDetail => cartDetails.Any(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits));
+                if (temp) //TODO: Handle this Temp variable.
                 {
-                    if (cartDetails.Any(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits))
+
+                    //TODO: Handle this logic based on 2 C + D scenario
+                    //TODO: Handle this logic based on A = 40%A
+                    promotionType.CartDetails.ForEach(promotionTypeCartDetail =>
                     {
                         //TODO: This logic needs to be handled for CartItemUnit > PromotionTypeCartItemUnit
-
-                        cartDetails.RemoveAll(x => x.SKUId == promotionTypeCartDetail.SKUId);
+                        cartDetails.RemoveAll(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId);
                         orderValue += promotionType.Price; //TODO: Verify this calculation
-                    }
-                });
+
+                    });
+                }
             });
 
             return orderValue; //TODO: If it is globally declared value then should we return it or not
