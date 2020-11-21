@@ -6,6 +6,8 @@ namespace PromotionEngine.Models
     {
         public List<CartDetail> CartDetails { get; set; }
 
-        public float Price { get; set; }
+        public double? Price { get; set; }
+
+        public double? Percentage { get; set; }
     }
 }

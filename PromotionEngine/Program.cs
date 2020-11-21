@@ -105,7 +105,13 @@ namespace PromotionEngine
                                 cartDetails.Add(new CartDetail { SKUId = promotionTypeCartDetail.SKUId, NoOfUnits = updatedUnits });
 
                             if (promotionTypeCartDetail.Equals(promotionType.CartDetails.Last()))
-                                orderValue += promotionType.Price;
+                            {
+                                if (promotionType.Price != null)
+                                    orderValue += promotionType.Price.Value;
+                                else
+                                    orderValue += GetUnitPriceForSKU(promotionTypeCartDetail.SKUId) * (promotionType.Percentage.Value / 100);
+                            }
+
 
                         } while (cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId)?.NoOfUnits >= promotionTypeCartDetail.NoOfUnits);
                         //TODO: Handle this First or Default to any.
