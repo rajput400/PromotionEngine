@@ -7,8 +7,6 @@ namespace PromotionEngine
 {
     public class Program
     {
-        static double orderValue = 0;
-
         static void Main(string[] args)
         {
 
@@ -21,6 +19,7 @@ namespace PromotionEngine
 
         public static double PromotionEngine(List<char> cart, List<PromotionType> promotionTypes)
         {
+            double orderValue = 0;
             // var cart = GetCart(); //TODO: Remove this.
 
             //TODO: This can be made under the repetitive function
@@ -32,9 +31,9 @@ namespace PromotionEngine
 
             var cartDetails = CalculateItemsInCart(cart);
 
-            ApplyingPromotionTypes(cartDetails, promotionTypes);
+            orderValue = ApplyingPromotionTypes(cartDetails, promotionTypes, orderValue);
 
-            CalculateCartItemsOrderValue(cartDetails);
+            orderValue = CalculateCartItemsOrderValue(cartDetails, orderValue);
 
             //TODO: Handle this promotion type here
 
@@ -49,7 +48,7 @@ namespace PromotionEngine
             return orderValue;
         }
 
-        private static double CalculateCartItemsOrderValue(List<CartDetail> cartDetails)
+        private static double CalculateCartItemsOrderValue(List<CartDetail> cartDetails, double orderValue)
         {
             cartDetails.ForEach(cartDetail =>
             {
@@ -64,7 +63,7 @@ namespace PromotionEngine
         }
 
         //TODO: Make use of Solid principles
-        private static double ApplyingPromotionTypes(List<CartDetail> cartDetails, List<PromotionType> promotionTypes) //TODO: Dictionary can be changed to List
+        private static double ApplyingPromotionTypes(List<CartDetail> cartDetails, List<PromotionType> promotionTypes, double orderValue) //TODO: Dictionary can be changed to List
         {
             //TODO: Handle this later on
             // C + D = 30
@@ -94,20 +93,25 @@ namespace PromotionEngine
                 var temp = promotionType.CartDetails.All(promotionTypeCartDetail => cartDetails.Any(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits));
                 if (temp) //TODO: Handle this Temp variable.
                 {
-
-                    //TODO: Handle this logic based on 2 C + D scenario
+                    //TODO: Handle mutually exclusive promotion types.
                     //TODO: Handle this logic based on A = 40%A
                     promotionType.CartDetails.ForEach(promotionTypeCartDetail =>
                     {
-                        //TODO: This logic needs to be handled for CartItemUnit > PromotionTypeCartItemUnit
-                        cartDetails.RemoveAll(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId);
-                        orderValue += promotionType.Price; //TODO: Verify this calculation
+                        do
+                        {
+                            var updatedUnits = cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId).NoOfUnits - promotionTypeCartDetail.NoOfUnits;
+                            cartDetails.RemoveAll(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId);
+                            if (updatedUnits > 0)
+                                cartDetails.Add(new CartDetail { SKUId = promotionTypeCartDetail.SKUId, NoOfUnits = updatedUnits });
+                            orderValue += promotionType.Price;
 
+                        } while (cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId).NoOfUnits >= promotionTypeCartDetail.NoOfUnits);
+                        //TODO: Handle this First or Default to any.
                     });
                 }
             });
 
-            return orderValue; //TODO: If it is globally declared value then should we return it or not
+            return orderValue;
         }
 
         private static List<CartDetail> CalculateItemsInCart(List<char> cart)
