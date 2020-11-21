@@ -14,14 +14,14 @@ namespace PromotionEngine
 
             Console.WriteLine("Hello World!");
 
-            PromotionEngine();
+            PromotionEngine(null, null); //TODO: Check how to pass the correct value.
 
             Console.ReadLine();
         }
 
-        public static double PromotionEngine()
+        public static double PromotionEngine(List<char> cart, List<PromotionType> promotionTypes)
         {
-            var cart = GetCart();
+            // var cart = GetCart(); //TODO: Remove this.
 
             //TODO: This can be made under the repetitive function
 
@@ -32,7 +32,7 @@ namespace PromotionEngine
 
             var cartDetails = CalculateItemsInCart(cart);
 
-            ApplyingPromotionTypes(cartDetails);
+            ApplyingPromotionTypes(cartDetails, promotionTypes);
 
             CalculateCartItemsOrderValue(cartDetails);
 
@@ -56,30 +56,38 @@ namespace PromotionEngine
                 var itemId = cartDetail.SKUId;
                 var itemUnits = cartDetail.NoOfUnits;
 
-                var unitPrice  = GetUnitPriceForSKU(itemId);
+                var unitPrice = GetUnitPriceForSKU(itemId);
                 orderValue += (unitPrice * itemUnits);
-            } );
+            });
 
             return orderValue;
         }
 
         //TODO: Make use of Solid principles
-        private static double ApplyingPromotionTypes(List<CartDetail> cartDetails) //TODO: Dictionary can be changed to List
+        private static double ApplyingPromotionTypes(List<CartDetail> cartDetails, List<PromotionType> promotionTypes) //TODO: Dictionary can be changed to List
         {
             //TODO: Handle this later on
             // C + D = 30
             // 1* C + 1*D, 30
             // 3 * A = 120
             // A = 40%A 
-            var promotionTypes = new List<PromotionType>
-            {
-                new PromotionType
-                {
-                    CartDetails = new List<CartDetail> {
-                    new CartDetail {SKUId = 'A', NoOfUnits = 3}},
-                    Price = 90
-                }
-            };
+
+            //NOW: TestData
+            // var promotionTypes = new List<PromotionType>
+            // {
+            //     new PromotionType
+            //     {
+            //         CartDetails = new List<CartDetail> {
+            //         new CartDetail {SKUId = 'A', NoOfUnits = 3}},
+            //         Price = 90
+            //     },
+            //     new PromotionType
+            //     {
+            //         CartDetails = new List<CartDetail> {
+            //         new CartDetail {SKUId = 'B', NoOfUnits = 2}},
+            //         Price = 50
+            //     }
+            // }; //TODO: Handle this scenario  A = 40%A 
 
             promotionTypes.ForEach(promotionType =>
             {
@@ -87,7 +95,6 @@ namespace PromotionEngine
                 {
                     if (cartDetails.Any(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits))
                     {
-                        //TODO: Write Elimination logic.
                         //TODO: This logic needs to be handled for CartItemUnit > PromotionTypeCartItemUnit
 
                         cartDetails.RemoveAll(x => x.SKUId == promotionTypeCartDetail.SKUId);
@@ -116,8 +123,10 @@ namespace PromotionEngine
             return cartDetails;
         }
 
+        //TODO: Can be made this into dictionary.
         private static float GetUnitPriceForSKU(char productId) //TODO: Take care of static keyword
         {
+            //TODO: Test Data
             //TODO: Take care of Break statement.
             switch (productId)
             {
@@ -140,6 +149,7 @@ namespace PromotionEngine
 
         private static List<char> GetCart()
         {
+            //TODO: Test Data
             var cart = new List<char> { 'A', 'B', 'C', 'A', 'B', 'A' }; //TODO: Variable 
 
             return cart;
