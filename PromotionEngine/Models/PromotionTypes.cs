@@ -2,11 +2,11 @@ using System.Collections.Generic;
 
 namespace PromotionEngine.Models
 {
-    public static class PromotionTypes
+    public class PromotionTypes : IPromotionTypes
     {
-        public static List<PromotionType> GetPromotionTypes()
+        public List<PromotionType> GetPromotionTypes()
         {
-              var promotionTypes = new List<PromotionType>
+            var promotionTypes = new List<PromotionType>
             {
                 new PromotionType
                 {

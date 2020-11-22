@@ -5,15 +5,22 @@ namespace PromotionEngine.Models
 {
     public class PromotionEngineCheckoutProcess : IPromotionEngineCheckoutProcess
     {
+        private readonly IPromotionTypes promotionTypes;
+
+        public PromotionEngineCheckoutProcess(IPromotionTypes promotionTypes)
+        {
+            this.promotionTypes = promotionTypes;
+        }
+
         public double CalculateTotalOrderValue(List<char> cart)
         {
             double orderValue = 0;
 
             var cartDetails = CalculateNoOfItemsInCart(cart);
 
-            var promotionTypes = PromotionTypes.GetPromotionTypes();
+            var getPromotionTypes = promotionTypes.GetPromotionTypes();
 
-            orderValue = ApplyingPromotionTypes(cartDetails, promotionTypes, orderValue);
+            orderValue = ApplyingPromotionTypes(cartDetails, getPromotionTypes, orderValue);
 
             orderValue = CalculateCartItemsOrderValue(cartDetails, orderValue);
 
