@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using PromotionEngine;
 using PromotionEngine.Models;
 using Xunit;
 
 namespace PromotionEngineTest
 {
-    public class PromotionEngineUnitTest
+    public class PromotionEngineCheckoutProcessUnitTest
     {
         [Fact]
         public void Test_PromotionEngine_Scenario1()
@@ -37,7 +36,8 @@ namespace PromotionEngineTest
             };
 
             //Act
-            var orderValue = Program.PromotionEngine(cart, promotionTypes);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess();
+            var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cart, promotionTypes);
 
             //Assert
             Assert.Equal(100, orderValue);
@@ -73,7 +73,8 @@ namespace PromotionEngineTest
             };
 
             //Act
-            var orderValue = Program.PromotionEngine(cart, promotionTypes);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess();
+            var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cart, promotionTypes);
 
             //Assert
             Assert.Equal(370, orderValue);
@@ -109,7 +110,8 @@ namespace PromotionEngineTest
             };
 
             //Act
-            var orderValue = Program.PromotionEngine(cart, promotionTypes);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess();
+            var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cart, promotionTypes);
 
             //Assert
             Assert.Equal(280, orderValue);
@@ -145,7 +147,8 @@ namespace PromotionEngineTest
             };
 
             //Act
-            var orderValue = Program.PromotionEngine(cart, promotionTypes);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess();
+            var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cart, promotionTypes);
 
             //Assert
             Assert.Equal(70, orderValue);
