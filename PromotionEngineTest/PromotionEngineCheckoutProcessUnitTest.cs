@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Moq;
 using PromotionEngine.Models;
 using PromotionEngine.Models.BusinessLogic;
@@ -18,7 +19,7 @@ namespace PromotionEngineTest
             promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypes());
 
             //Act
-            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object, GetLogger());
             var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartItems);
 
             //Assert
@@ -34,7 +35,7 @@ namespace PromotionEngineTest
             promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypes());
 
             //Act
-            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object, GetLogger());
             var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartItems);
 
             //Assert
@@ -50,7 +51,7 @@ namespace PromotionEngineTest
             promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypes());
 
             //Act
-            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object, GetLogger());
             var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartItems);
 
             //Assert
@@ -66,7 +67,7 @@ namespace PromotionEngineTest
             promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypeWithPercentage());
 
             //Act
-            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object, GetLogger());
             var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartItems);
 
             //Assert
@@ -82,7 +83,7 @@ namespace PromotionEngineTest
             promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypeWithPercentageForSameItem());
 
             //Act
-            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object, GetLogger());
             var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartItems);
 
             //Assert
@@ -104,7 +105,7 @@ namespace PromotionEngineTest
             promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypes());
 
             //Act
-            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object, GetLogger());
             var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartItems);
 
             //Assert
@@ -112,6 +113,12 @@ namespace PromotionEngineTest
         }
 
         #region Helper Methods
+
+        private ILogger<PromotionEngineCheckoutProcess> GetLogger()
+        { 
+            var logger = new Mock<ILogger<PromotionEngineCheckoutProcess>>();
+            return logger.Object;
+        }
 
         private List<PromotionType> GetPromotionTypes()
         {

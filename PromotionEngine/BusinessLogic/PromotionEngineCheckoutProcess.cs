@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,10 +7,12 @@ namespace PromotionEngine.Models.BusinessLogic
     public class PromotionEngineCheckoutProcess : IPromotionEngineCheckoutProcess
     {
         private readonly IPromotionTypes promotionTypes;
+        private readonly ILogger<PromotionEngineCheckoutProcess> logger;
 
-        public PromotionEngineCheckoutProcess(IPromotionTypes promotionTypes)
+        public PromotionEngineCheckoutProcess(IPromotionTypes promotionTypes, ILogger<PromotionEngineCheckoutProcess> logger)
         {
             this.promotionTypes = promotionTypes;
+            this.logger = logger;
         }
 
         public double CalculateTotalOrderValue(List<char> cart)
@@ -57,12 +60,14 @@ namespace PromotionEngine.Models.BusinessLogic
                             if (updatedUnits > 0)
                                 cartDetails.Add(new CartDetail { SKUId = promotionTypeCartDetail.SKUId, NoOfUnits = updatedUnits });
 
+                            logger.LogInformation($"Applying Promotion type to Cart Item: {promotionTypeCartDetail.SKUId}");
+
                             if (promotionTypeCartDetail.Equals(promotionType.CartDetails.Last()))
                             {
                                 if (promotionType.Price != null)
                                     orderValue += promotionType.Price.Value;
                                 else
-                                    orderValue += UnitPriceForSKU.GetPrice(promotionTypeCartDetail.SKUId) * (promotionType.Percentage.Value / 100);
+                                    orderValue += UnitPriceForSKU.GetPrice(promotionTypeCartDetail.SKUId, logger) * (promotionType.Percentage.Value / 100);
                             }
 
                         } while (cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId)?.NoOfUnits >= promotionTypeCartDetail.NoOfUnits);
@@ -70,6 +75,7 @@ namespace PromotionEngine.Models.BusinessLogic
                 }
             });
 
+            logger.LogInformation($"Order Value from PromotionType: {orderValue}");
             return orderValue;
         }
 
@@ -80,7 +86,7 @@ namespace PromotionEngine.Models.BusinessLogic
                var itemId = cartDetail.SKUId;
                var itemUnits = cartDetail.NoOfUnits;
 
-               var unitPrice = UnitPriceForSKU.GetPrice(itemId);
+               var unitPrice = UnitPriceForSKU.GetPrice(itemId, logger);
                orderValue += (unitPrice * itemUnits);
            });
 
