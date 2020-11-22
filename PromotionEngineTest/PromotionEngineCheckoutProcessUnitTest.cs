@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moq;
 using PromotionEngine.Models;
+using PromotionEngine.Models.BusinessLogic;
 using Xunit;
 
 namespace PromotionEngineTest

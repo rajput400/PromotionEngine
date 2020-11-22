@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PromotionEngine.Models
+namespace PromotionEngine.Models.BusinessLogic
 {
     public class PromotionEngineCheckoutProcess : IPromotionEngineCheckoutProcess
     {
@@ -64,7 +64,6 @@ namespace PromotionEngine.Models
                                 else
                                     orderValue += UnitPriceForSKU.GetPrice(promotionTypeCartDetail.SKUId) * (promotionType.Percentage.Value / 100);
                             }
-
 
                         } while (cartDetails.FirstOrDefault(x => x.SKUId == promotionTypeCartDetail.SKUId)?.NoOfUnits >= promotionTypeCartDetail.NoOfUnits);
                     });

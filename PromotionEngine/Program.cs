@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using PromotionEngine.Models;
+using PromotionEngine.Models.BusinessLogic;
 
 namespace PromotionEngine
 {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PromotionEngine.Models
+namespace PromotionEngine.Models.BusinessLogic
 {
     public interface IPromotionEngineCheckoutProcess
     {
