@@ -31,14 +31,12 @@ namespace PromotionEngine.Models
         {
             var cartDetails = new List<CartDetail>();
 
-            for (int i = 0; i < cart.Count;) //TODO: Using do while loop
+            for (int i = 0; i < cart.Count;)
             {
                 var item = cart.First();
                 var itemCount = cart.Count(x => x == item);
                 cart.RemoveAll(x => x == item);
                 cartDetails.Add(new CartDetail { SKUId = item, NoOfUnits = itemCount });
-
-                //TODO: Issue is with decreasing size list.
             }
 
             return cartDetails;
@@ -50,7 +48,6 @@ namespace PromotionEngine.Models
             {
                 if (promotionType.CartDetails.All(promotionTypeCartDetail => cartDetails.Any(cartDetail => cartDetail.SKUId == promotionTypeCartDetail.SKUId && cartDetail.NoOfUnits >= promotionTypeCartDetail.NoOfUnits)))
                 {
-                    //TODO: Handle mutually exclusive promotion types.
                     promotionType.CartDetails.ForEach(promotionTypeCartDetail =>
                     {
                         do
