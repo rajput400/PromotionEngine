@@ -24,7 +24,7 @@ namespace PromotionEngine
 
             Console.WriteLine("Hello World!");
 
-            promotionEngineProcess.CalculateTotalOrderValue(null, null); //TODO: Check how to pass the correct value.
+            promotionEngineProcess.CalculateTotalOrderValue(null); //TODO: Check how to pass the correct value.
 
             Console.ReadLine();
 

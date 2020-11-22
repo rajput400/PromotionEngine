@@ -5,11 +5,13 @@ namespace PromotionEngine.Models
 {
     public class PromotionEngineCheckoutProcess : IPromotionEngineCheckoutProcess
     {
-        public double CalculateTotalOrderValue(List<char> cart, List<PromotionType> promotionTypes)
+        public double CalculateTotalOrderValue(List<char> cart)
         {
             double orderValue = 0;
 
-            var cartDetails = CalculateItemsInCart(cart);
+            var cartDetails = CalculateNoOfItemsInCart(cart);
+
+            var promotionTypes = PromotionTypes.GetPromotionTypes();
 
             orderValue = ApplyingPromotionTypes(cartDetails, promotionTypes, orderValue);
 
@@ -20,22 +22,26 @@ namespace PromotionEngine.Models
             return orderValue;
         }
 
-        private static double CalculateCartItemsOrderValue(List<CartDetail> cartDetails, double orderValue)
+        //TODO: Make use of Solid principles
+
+        public List<CartDetail> CalculateNoOfItemsInCart(List<char> cart)
         {
-            cartDetails.ForEach(cartDetail =>
+            var cartDetails = new List<CartDetail>();
+
+            for (int i = 0; i < cart.Count;) //TODO: Using do while loop
             {
-                var itemId = cartDetail.SKUId;
-                var itemUnits = cartDetail.NoOfUnits;
+                var item = cart.First();
+                var itemCount = cart.Count(x => x == item);
+                cart.RemoveAll(x => x == item);
+                cartDetails.Add(new CartDetail { SKUId = item, NoOfUnits = itemCount });
 
-                var unitPrice = GetUnitPriceForSKU(itemId);
-                orderValue += (unitPrice * itemUnits);
-            });
+                //TODO: Issue is with decreasing size list.
+            }
 
-            return orderValue;
+            return cartDetails;
         }
 
-        //TODO: Make use of Solid principles
-        private static double ApplyingPromotionTypes(List<CartDetail> cartDetails, List<PromotionType> promotionTypes, double orderValue)
+        public double ApplyingPromotionTypes(List<CartDetail> cartDetails, List<PromotionType> promotionTypes, double orderValue)
         {
             promotionTypes.ForEach(promotionType =>
             {
@@ -56,7 +62,7 @@ namespace PromotionEngine.Models
                                 if (promotionType.Price != null)
                                     orderValue += promotionType.Price.Value;
                                 else
-                                    orderValue += GetUnitPriceForSKU(promotionTypeCartDetail.SKUId) * (promotionType.Percentage.Value / 100);
+                                    orderValue += UnitPriceForSKU.GetPrice(promotionTypeCartDetail.SKUId) * (promotionType.Percentage.Value / 100);
                             }
 
 
@@ -68,45 +74,18 @@ namespace PromotionEngine.Models
             return orderValue;
         }
 
-        private static List<CartDetail> CalculateItemsInCart(List<char> cart)
+        public double CalculateCartItemsOrderValue(List<CartDetail> cartDetails, double orderValue)
         {
-            var cartDetails = new List<CartDetail>();
+            cartDetails.ForEach(cartDetail =>
+           {
+               var itemId = cartDetail.SKUId;
+               var itemUnits = cartDetail.NoOfUnits;
 
-            for (int i = 0; i < cart.Count;) //TODO: Using do while loop
-            {
-                var item = cart.First();
-                var itemCount = cart.Count(x => x == item);
-                cart.RemoveAll(x => x == item);
-                cartDetails.Add(new CartDetail { SKUId = item, NoOfUnits = itemCount });
+               var unitPrice = UnitPriceForSKU.GetPrice(itemId);
+               orderValue += (unitPrice * itemUnits);
+           });
 
-                //TODO: Issue is with decreasing size list.
-            }
-
-            return cartDetails;
-        }
-
-        //TODO: Add Unit test for empty scenarios.
-        //TODO: Can be made this into dictionary.
-        private static float GetUnitPriceForSKU(char productId) //TODO: Take care of static keyword
-        {
-            //TODO: Test Data
-            switch (productId)
-            {
-                case 'A':
-                    return 50;
-
-                case 'B':
-                    return 30;
-
-                case 'C':
-                    return 20;
-
-                case 'D':
-                    return 15;
-
-                default:
-                    return 50; //TODO: Handle this later on
-            }
+            return orderValue;
         }
     }
 }
