@@ -27,6 +27,8 @@ namespace PromotionEngine
         private static void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IPromotionEngineCheckoutProcess, PromotionEngineCheckoutProcess>();
+
+            services.AddScoped<IPromotionTypes, PromotionTypes>();
         }
     }
 }

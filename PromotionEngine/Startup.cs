@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -20,11 +21,17 @@ namespace PromotionEngine
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            logger.LogInformation("Application Started");
+            logger.LogInformation("Application Started, Press Enter to continue");
 
-            Console.WriteLine("Hello World!");
+            Console.ReadLine();
 
-            promotionEngineProcess.CalculateTotalOrderValue(null); //TODO: Check how to pass the correct value.
+            Console.WriteLine("Enter the list of Items in the Cart in the form of A,B,C,D only example: A,B");
+
+            var cartValue = Console.ReadLine().Replace(',',' ').Replace(" ","").ToCharArray().ToList();
+
+            var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cartValue);
+
+            Console.WriteLine($"Total Order Value is: {orderValue}");
 
             Console.ReadLine();
 
@@ -33,8 +40,9 @@ namespace PromotionEngine
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            //TODO: Handle this later on
-            throw new System.NotImplementedException();
+            logger.LogInformation("Task Completed");
+
+            return Task.CompletedTask;
         }
     }
 }

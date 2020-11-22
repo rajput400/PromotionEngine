@@ -24,12 +24,8 @@ namespace PromotionEngine.Models
 
             orderValue = CalculateCartItemsOrderValue(cartDetails, orderValue);
 
-            //TODO: Make sure to write code which is open for extension.
-
             return orderValue;
         }
-
-        //TODO: Make use of Solid principles
 
         public List<CartDetail> CalculateNoOfItemsInCart(List<char> cart)
         {

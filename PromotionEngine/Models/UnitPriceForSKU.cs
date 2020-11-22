@@ -1,12 +1,9 @@
 namespace PromotionEngine.Models
 {
-    //TODO: Add Unit test for empty scenarios.
-    //TODO: Can be made this into dictionary.
     public static class UnitPriceForSKU
     {
         public static int GetPrice(char itemId)
         {
-            //TODO: Test Data
             switch (itemId)
             {
                 case 'A':
@@ -22,7 +19,7 @@ namespace PromotionEngine.Models
                     return 15;
 
                 default:
-                    return 50; //TODO: Handle this later on
+                    return 0;
             }
         }
     }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Moq;
 using PromotionEngine.Models;
 using Xunit;
@@ -69,6 +70,28 @@ namespace PromotionEngineTest
 
             //Assert
             Assert.Equal(70, orderValue);
+        }
+
+        [Theory(DisplayName = "Test_CalculateTotalOrderValue_WithInvalidString")]
+        [InlineData("A,;,!", 50)]
+        [InlineData(" ", 0)]
+        [InlineData("1,2,3,4", 0)]
+        [InlineData("F,E,G", 0)]
+        [InlineData("A3C",70)]
+        public void Test_CalculateTotalOrderValue_WithInvalidString(string inputCartString, double expectedOrderValue)
+        {
+            //Act
+            var cart = inputCartString.Replace(',', ' ').Replace(" ", "").ToCharArray().ToList();
+            ; //TODO: Variable
+            var promotionTypesMock = new Mock<IPromotionTypes>();
+            promotionTypesMock.Setup(x => x.GetPromotionTypes()).Returns(GetPromotionTypes());
+
+            //Act
+            var promotionEngineProcess = new PromotionEngineCheckoutProcess(promotionTypesMock.Object);
+            var orderValue = promotionEngineProcess.CalculateTotalOrderValue(cart);
+
+            //Assert
+            Assert.Equal(expectedOrderValue, orderValue);
         }
 
         #region Helper Methods
