@@ -1,24 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using PromotionEngine.Models.BusinessLogic;
 
 namespace PromotionEngine
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
+            var hostBuilder = new HostBuilder();
+            hostBuilder.UseEnvironment("Development")
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHostedService<Startup>();
+                ConfigureServices(services);
+            }).ConfigureLogging(configureLogging =>
+            {
+                configureLogging.AddConsole();
+                configureLogging.SetMinimumLevel(LogLevel.Information);
+            });
 
-            Console.WriteLine("Hello World!");
-
-            PromotionEngine();
-
-            Console.ReadLine();
+            hostBuilder.RunConsoleAsync();
         }
 
-        private static void PromotionEngine()
+        private static void ConfigureServices(IServiceCollection services)
         {
-            //TODO: Add Promotion Engine logic.
+            services.AddScoped<IPromotionEngineCheckoutProcess, PromotionEngineCheckoutProcess>();
+
+            services.AddScoped<IPromotionTypes, PromotionTypes>();
         }
     }
 }
