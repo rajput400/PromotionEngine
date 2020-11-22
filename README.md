@@ -46,3 +46,10 @@ It contains the Unit test project for testing the PromotionEngine project.
 * Promotion engine is able to handle for more promotion types (e.g. a future promotion could be x% of a SKU unit price). Unit test is added for the same.  
 
 * It is assumed that Unit Price will be static for the whole process but it can be extended to add other values.  
+
+### Contact Info
+
+Hemant Kumar  
++45-91618007  
+rajput.400@gmail.com  
+
